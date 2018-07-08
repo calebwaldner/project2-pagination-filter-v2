@@ -1,13 +1,11 @@
 //Use ​unobtrusive ​JavaScript ​to ​append ​markup ​for ​the ​pagination ​links
 
-//const numberOfStudents = document.getElementsByClassName("student-list").getElementsByTagName("li");
-//console.log(document.getElementsByClassName("student-list").getElementsByTagName("li").length);
-//console.log(document.getElementsByClassName("student-list").querySelectorAll("li").length);
-//console.log(numberOfStudents);
+const studentList = document.querySelectorAll('.student-item'); //selects the complete html list as an array object
 const studentsPerPage = 10; //the number of students per page
-const numberOfStudents = document.querySelectorAll('.student-list li').length; //stores the total number of students (list items) in variable
+const numberOfStudents = studentList.length; //stores the total number of students (list items) in variable
 const numberOfPages = (list, studentsPerPage) => Math.ceil(list/studentsPerPage); //divides total student list by number of students on each page and rounds up
-
+console.log(`Number of students is ${numberOfStudents}`);
+console.log(studentList[1]);
 
 /*This ​function ​builds ​a ​list ​of ​ten ​students ​and ​displays ​it ​on ​the page. ​The ​students ​displayed depends ​on ​the ​page ​number ​passed ​to ​this ​function. ​The ​function ​should ​loop ​through ​all ​the students ​in ​the ​list ​and ​determine ​if ​each ​student ​is ​on ​this ​page. ​It ​will ​show ​all ​the ​students ​on this ​page ​and ​hide ​the ​rest. ​Here ​are ​some ​ideas ​for ​how ​this ​could ​work ​in ​code:*/
 function showPage(/* arguments for page number and student list */) {
