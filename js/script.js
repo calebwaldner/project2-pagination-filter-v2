@@ -1,8 +1,9 @@
 //Use ​unobtrusive ​JavaScript ​to ​append ​markup ​for ​the ​pagination ​links
 
-const studentList = document.querySelectorAll('.student-item'); //selects the complete html list as an array object
+const studentItem = document.querySelectorAll('.student-item'); //selects the complete html list as an array object
+const studentList = document.querySelector('.student-list');
 const studentsPerPage = 10; //the number of students per page
-const numberOfStudents = studentList.length; //stores the total number of students (list items) in variable
+const numberOfStudents = studentItem.length; //stores the total number of students (list items) in variable
 const page = document.querySelector('.page');
 const getNumberOfPages = (list, studentsPerPage) => Math.ceil(list/studentsPerPage); //divides total student list by number of students on each page and rounds up
 
@@ -20,16 +21,20 @@ const createLinkButton = (numOfPag, pgNum) => { // creates page buttons
   let pagUl = document.querySelector('.pagination ul'); //gets pagination ul tag
   let linksLi = document.createElement('li'); //creates li element and stores it in variable
   let pageButton = document.createElement('a'); //creates a element and stores it in variable
-
   pageButton.href = '#'; //causes buttons to send user to top of page
   pagUl.appendChild(linksLi); //adds new li tag to ul tag
   linksLi.appendChild(pageButton); //adds new a tag to li tag
   pageButton.textContent = pgNum; //populates li tag content with page number using argument
 }
 
+function hideStudents() {
+  studentList.style.display = 'none';
+}
+
 /*This ​function ​builds ​a ​list ​of ​ten ​students ​and ​displays ​it ​on ​the page. ​The ​students ​displayed depends ​on ​the ​page ​number ​passed ​to ​this ​function. ​The ​function ​should ​loop ​through ​all ​the students ​in ​the ​list ​and ​determine ​if ​each ​student ​is ​on ​this ​page. ​It ​will ​show ​all ​the ​students ​on this ​page ​and ​hide ​the ​rest. ​Here ​are ​some ​ideas ​for ​how ​this ​could ​work ​in ​code:*/
-function showPage(/* arguments for page number and student list */) {
+function showPage(/* arguments for page number and student list */pageNum, list) {
   // first hide all students on the page
+
   // then loop through all students in our student list argument
   // if student should be on this page number
   // show the student
@@ -41,11 +46,9 @@ function showPage(/* arguments for page number and student list */) {
 function appendPageLinks(list) {
   let numberOfPages = getNumberOfPages(list, studentsPerPage); // determines how many pages
   createPageLinksSection(page); // creates a page link section
-
   for (let i=0; i<numberOfPages; i++) { // "for" every page
     createLinkButton(numberOfPages, i+1); // creates button for each page
   }
-
   // add a page link to the page link section
   // remove the old page link section from the site
   // append our new page link section to the site
@@ -54,7 +57,7 @@ function appendPageLinks(list) {
   // mark that link as "active"
 }
 
-
+hideStudents();
 appendPageLinks(numberOfStudents);
 
 
@@ -77,7 +80,7 @@ appendPageLinks(numberOfStudents);
 
 
 console.log(`Number of students is ${numberOfStudents}`);
-console.log(studentList[1]);
+console.log(studentItem[1]);
 
 
 
