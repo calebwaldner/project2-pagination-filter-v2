@@ -1,8 +1,8 @@
 
-const studentItem = document.querySelectorAll('.student-item'); //selects the complete html list as an array object
+const studentItems = document.querySelectorAll('.student-item'); //selects the complete html list as an array object
 const studentList = document.querySelector('.student-list');
 const studentsPerPage = 10; //the number of students per page
-const numberOfStudents = studentItem.length; //stores the total number of students (list items) in variable
+const numberOfStudents = studentItems.length; //stores the total number of students (list items) in variable
 const page = document.querySelector('.page');
 const getNumberOfPages = (list, studentsPerPage) => Math.ceil(list/studentsPerPage); //divides total student list by number of students on each page and rounds up
 let pagUl;
@@ -10,13 +10,13 @@ let linksLi;
 let pageButton;
 let linksDiv;
 let linksUl;
+let topNum;
+let bottomNum;
 
 const createPageLinksSection = (pageDiv) => { //creates the container div that holds buttons
   linksDiv = document.createElement('div'); //creates div element and stores it in variable
   linksUl = document.createElement('ul'); //creates ul element and stores it in variable
-
   linksDiv.className = 'pagination'; //gives class name to created div element
-
   pageDiv.appendChild(linksDiv); //appends new div element to the main page div
   linksDiv.appendChild(linksUl); //appends new ul element to the new links div
   }
@@ -31,8 +31,10 @@ const createLinkButton = (numOfPag, pgNum) => { // creates page buttons
   pageButton.textContent = pgNum; //populates li tag content with page number using argument
 }
 
-function hideStudents() { //hides all the students on the page
-  studentList.style.display = 'none';
+function hideStudents(list) { //hides all the students on the page
+  for (let i=0; i<list.length; i++) {
+    list[i].style.display = 'none';
+  }
 }
 
 function setActive() {
@@ -41,11 +43,23 @@ function setActive() {
   }
 }
 
+//not finished, needs to show 1-10 if one is clicked, 11-20 if two is clicked
+function getNumbers(pageNum) {
+  topNum = pageNum*10;
+  bottomNum = topNum-10;
+}
+
 function showPage(/* arguments for page number and student list */pageNum, list) { //​builds ​a ​list ​of ​ten ​students ​and ​displays ​it ​on ​the page.
   // first hide all students on the page
-  hideStudents();
+  hideStudents(list);
+  getNumbers(pageNum);
   // then loop through all students in our student list argument
-
+  for (i=0; i<list.length; i++) {
+    if (bottomNum <= i && i < topNum) {
+      list[i].style.display = 'list-item';
+      console.log(i+1);
+    }
+  }
   // what i need to do here is show students 1-10 if the active class content is 1 or 11-20 if the active class content is 2 and so forth
 
   // if student should be on this page number
@@ -77,7 +91,7 @@ function appendPageLinks(list) { //creates ​all ​the ​page ​links ​bas
 
 
 
-showPage();
+showPage(6, studentItems);
 appendPageLinks(numberOfStudents);
 
 
@@ -98,7 +112,7 @@ appendPageLinks(numberOfStudents);
 
 
 console.log(`Number of students is ${numberOfStudents}`);
-console.log(studentItem[1]);
+console.log(studentItems[1]);
 
 
 
