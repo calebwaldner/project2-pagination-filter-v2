@@ -4,7 +4,7 @@ const studentList = document.querySelector('.student-list');
 const studentsPerPage = 10; //the number of students per page
 const numberOfStudents = studentItems.length; //stores the total number of students (list items) in variable
 const page = document.querySelector('.page');
-const getNumberOfPages = (list, studentsPerPage) => Math.ceil(list/studentsPerPage); //divides total student list by number of students on each page and rounds up
+const getNumberOfPages = (list, perPage) => Math.ceil(list/perPage); //divides total student list by number of students on each page and rounds up
 let pagUl;
 let linksLi;
 let pageButton;
@@ -12,6 +12,7 @@ let linksDiv;
 let linksUl;
 let topNum;
 let bottomNum;
+let clickedNum = 1;
 
 const createPageLinksSection = (pageDiv) => { //creates the container div that holds buttons
   linksDiv = document.createElement('div'); //creates div element and stores it in variable
@@ -37,109 +38,86 @@ function hideStudents(list) { //hides all the students on the page
   }
 }
 
-function setActive() {
+
+
+
+
+
+function setActive() { //sets the clicked anchor tag class as active, removes old active tag from previous active
   if (event.target.tagName == 'A') {
+    let allLinks = document.querySelectorAll('.pagination ul li a');
+    for (let i=0; i<allLinks.length; i++) {
+      allLinks[i].classList.remove("active");
+    }
     event.target.className = 'active';
   }
 }
 
-//not finished, needs to show 1-10 if one is clicked, 11-20 if two is clicked
-function getNumbers(pageNum) {
-  topNum = pageNum*10;
-  bottomNum = topNum-10;
+
+
+function getNumbers(pageNum) { //sets the topNum and bottomNum variables according to the pageNum, example pageNum 2 gives 10-20 as topNum and bottomNum
+  topNum = pageNum*studentsPerPage;
+  bottomNum = topNum-studentsPerPage;
 }
 
-function showPage(/* arguments for page number and student list */pageNum, list) { //​builds ​a ​list ​of ​ten ​students ​and ​displays ​it ​on ​the page.
-  // first hide all students on the page
-  hideStudents(list);
-  getNumbers(pageNum);
-  // then loop through all students in our student list argument
-  for (i=0; i<list.length; i++) {
+function showPage(pageNum, list) { //​builds ​a ​list ​of ​students ​and ​displays ​it ​on ​the page.
+  hideStudents(list); //first hides all students on the page
+  getNumbers(pageNum); //gets numbers to filter students against
+  for (i=0; i<list.length; i++) { //loops through student list and displays students who fall within the number range
     if (bottomNum <= i && i < topNum) {
       list[i].style.display = 'list-item';
       console.log(i+1);
     }
   }
-  // what i need to do here is show students 1-10 if the active class content is 1 or 11-20 if the active class content is 2 and so forth
-
-  // if student should be on this page number
-  // show the student
-
 }
 
+function removeOldLinks() { //removes old link section
+  let pageDiv = document.querySelector('.pagination');
+  pageDiv.remove();
+}
 
-function appendPageLinks(list) { //creates ​all ​the ​page ​links ​based ​on ​a ​list ​of ​students.
-  let numberOfPages = getNumberOfPages(list, studentsPerPage); // determines how many pages
-  createPageLinksSection(page); // creates a page link section
-  for (let i=0; i<numberOfPages; i++) { // "for" every page
-    createLinkButton(numberOfPages, i+1); // creates button for each page
+function createButtons(numPag) {
+  for (let i=0; i<numPag; i++) { // "for" every page
+    createLinkButton(numPag, i+1); // creates button for each page
   }
+}
+
+function appendPageLinks(list, perPage) { //creates ​all ​the ​page ​links ​based ​on ​a ​list ​of ​students.
+  let numberOfPages = getNumberOfPages(list, perPage); // determines how many pages
+  createPageLinksSection(page); // creates a page link section
+  createButtons(numberOfPages);
   // add a page link to the page link section
   // remove the old page link section from the site
+
+
   // append our new page link section to the site
   // define what happens when you click a link (event listener)
   linksDiv.addEventListener('click', (event) => {
-    setActive();
-  });
 
+    //*********this should be the active class content. Be better
+    clickedNum = event.target.textContent;
+    console.log(clickedNum);
+    showPage(clickedNum, studentItems);
+    setActive();
+    //removeOldLinks();
+    //createPageLinksSection(page); //creates a page link section again
+    //createButtons(numberOfPages);
+  });
+  //   Use showPage to display the page for the link clicked
+  //   mark that link as "active"
 
 }
 
-//   Use showPage to display the page for the link clicked
-//   mark that link as "active"
-// }
 
 
 
-showPage(6, studentItems);
-appendPageLinks(numberOfStudents);
 
 
+showPage(clickedNum, studentItems);
+appendPageLinks(numberOfStudents, studentsPerPage);
 
-//  let pageLink = document.createElement('button');
-
-
-
-  // for () {`
-  //   <div class="pagination">
-  //     <ul>
-  //       <li>
-  //         <a href="#">1</a>
-  //       </li>
-  // `}
 
 
 
 
 console.log(`Number of students is ${numberOfStudents}`);
-console.log(studentItems[1]);
-
-
-
-
-
-
-
-/*
-`
-<div class="pagination">
-        <ul>
-          <li>
-            <a class="active" href="#">1</a>
-          </li>
-           <li>
-            <a href="#">2</a>
-          </li>
-           <li>
-            <a href="#">3</a>
-          </li>
-           <li>
-            <a href="#">4</a>
-          </li>
-           <li>
-            <a href="#">5</a>
-          </li>
-        </ul>
-      </div>
-`
-*/
