@@ -92,20 +92,10 @@ function appendPageLinks(list, perPage) { //creates ​all ​the ​page ​lin
 
   // append our new page link section to the site
   // define what happens when you click a link (event listener)
-  linksDiv.addEventListener('click', (event) => {
 
-    //*********this should be the active class content. Be better
-    clickedNum = event.target.textContent;
-    console.log(clickedNum);
-    showPage(clickedNum, studentItems);
-    setActive();
-    //removeOldLinks();
-    //createPageLinksSection(page); //creates a page link section again
-    //createButtons(numberOfPages);
-  });
   //   Use showPage to display the page for the link clicked
   //   mark that link as "active"
-
+  document.querySelectorAll('.pagination ul li a')[0].className = 'active';
 }
 
 
@@ -116,7 +106,12 @@ function appendPageLinks(list, perPage) { //creates ​all ​the ​page ​lin
 showPage(clickedNum, studentItems);
 appendPageLinks(numberOfStudents, studentsPerPage);
 
-
+linksDiv.addEventListener('click', (event) => {
+  setActive();
+  clickedNum = document.querySelector('.active').textContent;
+  console.log(clickedNum);
+  showPage(clickedNum, studentItems);
+});
 
 
 
