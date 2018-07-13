@@ -3,13 +3,13 @@ const studentsPerPage = 10; //the number of students per page
 const numberOfStudents = studentItems.length; //stores the total number of students (list items) in variable
 const page = document.querySelector('.page'); //gets the main page div holding student list
 const getNumberOfPages = (list, perPage) => Math.ceil(list/perPage); //divides total student list by number of students on each page and rounds up
-let pagUl;
-let linksLi;
-let pageButton;
-let linksDiv;
-let linksUl;
-let topNum;
-let bottomNum;
+const pageHeader = document.querySelector('.page-header'); //gets page header div
+const createDiv = document.createElement('div');
+const searchBarHTML = `
+  <input placeholder="Search for students... " title="Type in a name">
+  <button>Search</button>
+`;
+let pagUl, linksLi, pageButton, linksDiv, linksUl, topNum, bottomNum;
 let clickedNum = 1;
 
 const createPageLinksSection = (pageDiv) => { //creates the container div that holds buttons
@@ -74,8 +74,38 @@ function appendPageLinks(list, perPage) { //creates ​all ​the ​page ​lin
   document.querySelectorAll('.pagination ul li a')[0].className = 'active'; //sets the first ancor tag as active class
 }
 
+const appendItem = (location, item, className, innerHTML) => {
+  let element = item;
+  element.className = className;
+  element.innerHTML = innerHTML;
+  location.appendChild(element);
+}
+
+const matchStudents = (list) => {
+  let input, filter, students, h3, i;
+  input = document.querySelector('.student-search input'); //gets input element
+  filter = input.value.toUpperCase();
+  students = list;
+  for (i=0; i<students.length; i++) {
+    h3 = students[i].querySelector('h3');
+    if (h3.innerHTML.toUpperCase().indexOf(filter) > -1) {
+      students[i].style.display = 'list-item';
+    } else {
+      students[i].style.display = 'none';
+    }
+  }
+}
+
 showPage(clickedNum, studentItems); //initial showPage function call on page load
 appendPageLinks(numberOfStudents, studentsPerPage); //initial appendPageLinks function call on page load
+appendItem(pageHeader, createDiv, 'student-search', searchBarHTML); //appends search bar to header div
+
+let searchBox = document.querySelector('.student-search');
+searchBox.addEventListener('click', (event) => {
+  if (event.target.tagName == 'BUTTON') {
+    console.log(matchStudents(studentItems));
+  }
+});
 
 linksDiv.addEventListener('click', (event) => { //event listener listening for clicks on anchor tags within the pagination div
   setActive();
