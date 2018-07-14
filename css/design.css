@@ -21,6 +21,15 @@ body{
     text-transform: uppercase;
     font-weight: bold;
     color: #555;
+    margin-right: 10px;
+  }
+
+  .page-header h3{
+    float: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: grey;
+    margin-top: 7px;
   }
 
   .page-header .student-search{
@@ -99,7 +108,7 @@ body{
   margin: 40px 0 0 0;
   text-align: center;
 }
- 
+
   .pagination li{
     display: inline;
   }
