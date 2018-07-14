@@ -14,7 +14,7 @@ const createNoResultsDiv = document.createElement('div');
 const createResultsH3 = document.createElement('h3');
 const createUl = document.createElement('ul');
 const searchBarHTML = `
-  <input placeholder="Search for students... " title="Type in a name">
+  <input placeholder="Search for students... " title="Type in a name" class='search-box'>
   <button class='searchButton'>Search</button>
 `;
 const noResultsHTML = `
@@ -144,6 +144,11 @@ const appendResults = () => {
     if (pseudoTopNumber>studentArrWorking.length) {
       pseudoTopNumber = studentArrWorking.length;
     }
+    if (pseudoTopNumber==bottomNum+1) {
+      resultsHTML = `Student ${pseudoTopNumber} out of ${studentArrWorking.length}`
+      appendItem(pageHeader, createResultsH3, 'results', resultsHTML);
+      return;
+    }
     resultsHTML = `Students ${bottomNum+1}-${pseudoTopNumber} out of ${studentArrWorking.length}`;
   }
   appendItem(pageHeader, createResultsH3, 'results', resultsHTML);
@@ -189,6 +194,22 @@ const refreshPagination = () => {
   appendPageLinks(studentArrWorking, studentsPerPage);
 }
 
+const runSearch = () => {
+  matchStudents(studentArrAll, studentArrSearch);
+  popWorkingList(studentArrSearch);
+  if (checkArrBlank(studentArrWorking)) {
+  console.log(checkArrBlank(studentArrWorking));
+    startPgOne();
+    refreshPagination();
+    refreshList();
+    console.log(studentArrWorking);
+  } else {/* message saying no results found*/
+    refreshPagination();
+    refreshList();
+    showMsgNoResult();
+  }
+}
+
 startPgOne();
 popWorkingList(studentArrAll);
 appendSearch();
@@ -208,17 +229,9 @@ linksDiv.addEventListener('click', (event) => {
 });
 
 document.querySelector('.searchButton').addEventListener('click', (event) => {
-  matchStudents(studentArrAll, studentArrSearch);
-  popWorkingList(studentArrSearch);
-  if (checkArrBlank(studentArrWorking)) {
-  console.log(checkArrBlank(studentArrWorking));
-    startPgOne();
-    refreshPagination();
-    refreshList();
-    console.log(studentArrWorking);
-  } else {/* message saying no results found*/
-    refreshPagination();
-    refreshList();
-    showMsgNoResult();
-  }
+  runSearch();
+});
+
+document.querySelector('.search-box').addEventListener('keyup', (event) => {
+  runSearch();
 });
