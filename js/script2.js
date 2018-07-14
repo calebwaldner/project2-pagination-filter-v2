@@ -10,17 +10,16 @@ const page = document.querySelector('.page'); //gets the main page div holding s
 const pageHeader = document.querySelector('.page-header'); //gets page header div
 const createLinksDiv = document.createElement('div');
 const createSearchDiv = document.createElement('div');
-// const createNoResultsDiv = document.createElement('div');
+const createNoResultsDiv = document.createElement('div');
 const createResultsH3 = document.createElement('h3');
 const createUl = document.createElement('ul');
 const searchBarHTML = `
   <input placeholder="Search for students... " title="Type in a name">
   <button class='searchButton'>Search</button>
 `;
-
-// const noResultsHTML = `
-//   <h3>No Results Found</h3>
-// `;
+const noResultsHTML = `
+  <h3>No Results Found</h3>
+`;
 
 const hideStudents = (list) => {
   for (let i=0; i<list.length; i++) {
@@ -125,13 +124,13 @@ const appendPageLinks = (length, perPage) => { //creates ​all ​the ​page �
   }
 }
 
-// const clearMessage = () => {
-//   removeContainer(parent, removeThis)
-// }
-//
-// const showMsgNoResult = () => {
-//   appendItem();
-// }
+const clearMessage = () => {
+  removeContainer(page, document.querySelector('.no-results'))
+}
+
+const showMsgNoResult = () => {
+  appendItem(page, createNoResultsDiv, 'no-results', noResultsHTML);
+}
 
 const appendSearch = () => { //appends search bar to header div
   appendItem(pageHeader, createSearchDiv, 'student-search', searchBarHTML);
@@ -182,6 +181,7 @@ const refreshList = () => {
   clearArr(studentArrDisplay);
   showPage(clickedNum, studentArrWorking, studentArrDisplay);
   updateResults();
+  clearMessage();
 }
 
 const refreshPagination = () => {
@@ -219,5 +219,6 @@ document.querySelector('.searchButton').addEventListener('click', (event) => {
   } else {/* message saying no results found*/
     refreshPagination();
     refreshList();
+    showMsgNoResult();
   }
 });
