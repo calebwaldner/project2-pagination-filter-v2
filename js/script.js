@@ -7,9 +7,10 @@ const pageHeader = document.querySelector('.page-header'); //gets page header di
 const createDiv = document.createElement('div');
 const searchBarHTML = `
   <input placeholder="Search for students... " title="Type in a name">
-  <button>Search</button>
+  <button class='button'>Search</button>
 `;
 let pagUl, linksLi, pageButton, linksDiv, linksUl, topNum, bottomNum;
+let studentArr = [];
 let clickedNum = 1;
 
 const createPageLinksSection = (pageDiv) => { //creates the container div that holds buttons
@@ -24,11 +25,14 @@ const createLinkButton = (numOfPag, pgNum) => { // creates page buttons
   pagUl = document.querySelector('.pagination ul'); //gets pagination ul elements
   linksLi = document.createElement('li'); //creates li element and stores it in variable
   pageButton = document.createElement('a'); //creates anchor element and stores it in variable
-  pageButton.href = '#'; //sets button href to #
   pagUl.appendChild(linksLi); //appends new li tag to ul tag
   linksLi.appendChild(pageButton); //appends new anchor tag to li tag
   pageButton.textContent = pgNum; //populates li tag content with page number using argument
+  pageButton.classList.add('button');
+  pageButton.href = '#'; //sets button href to #
 }
+
+const clearButtons = location => {location.innerHTML = ``}
 
 function hideStudents(list) { //hides all the students on the page
   for (let i=0; i<list.length; i++) {
@@ -42,7 +46,7 @@ function setActive() { //sets the clicked anchor tag class as active, removes ol
     for (let i=0; i<allLinks.length; i++) { //loops through array to remove active class from previous click
       allLinks[i].classList.remove("active");
     }
-    event.target.className = 'active'; //sets click target as active class
+    event.target.classList.add('active'); //sets click target as active class
   }
 }
 
@@ -51,12 +55,21 @@ function getNumbers(pageNum) { //sets the topNum and bottomNum variables accordi
   bottomNum = topNum-studentsPerPage;
 }
 
+// function showPage(pageNum, list) { //​builds ​a ​list ​of ​students ​and ​displays ​it ​on ​the page.
+//   hideStudents(list); //first hides all students on the page
+//   getNumbers(pageNum); //gets numbers to filter students against
+//   for (i=0; i<list.length; i++) { //loops through student list and displays students who fall within the number range
+//     if (bottomNum <= i && i < topNum) { //if within number range
+//       list[i].style.display = 'list-item'; //sets display property to make student visible
+//     }
+//   }
+// }
+
 function showPage(pageNum, list) { //​builds ​a ​list ​of ​students ​and ​displays ​it ​on ​the page.
-  hideStudents(list); //first hides all students on the page
   getNumbers(pageNum); //gets numbers to filter students against
   for (i=0; i<list.length; i++) { //loops through student list and displays students who fall within the number range
     if (bottomNum <= i && i < topNum) { //if within number range
-      list[i].style.display = 'list-item'; //sets display property to make student visible
+      studentArr.push(list[i]);
     }
   }
 }
@@ -71,7 +84,7 @@ function appendPageLinks(list, perPage) { //creates ​all ​the ​page ​lin
   let numberOfPages = getNumberOfPages(list, perPage); //determines how many pages
   createPageLinksSection(page); //creates a page link section
   createButtons(numberOfPages); //creates anchor tags (buttons)
-  document.querySelectorAll('.pagination ul li a')[0].className = 'active'; //sets the first ancor tag as active class
+  document.querySelectorAll('.pagination ul li a')[0].classList.add('active'); //sets the first ancor tag as active class
 }
 
 const appendItem = (location, item, className, innerHTML) => {
@@ -89,28 +102,62 @@ const matchStudents = (list) => {
   for (i=0; i<students.length; i++) {
     h3 = students[i].querySelector('h3');
     if (h3.innerHTML.toUpperCase().indexOf(filter) > -1) {
-      students[i].style.display = 'list-item';
-    } else {
-      students[i].style.display = 'none';
+      studentArr.push(students[i]);
     }
   }
 }
 
-showPage(clickedNum, studentItems); //initial showPage function call on page load
+const checkBlank = (location) => { //returns false if input is blank, true if not blank
+  value = location.value;
+  if (value==null || value=="") {
+    console.log('blank box');
+    return false;
+  } else {
+    return true;
+  }
+}
+
+const clearArr = (arr) => {arr.length = 0}
+
+const displayArr = (arr) => {
+  for (let i=0; i<arr.length; i++) {
+    arr[i].style.display = 'list-item';
+    console.log(arr[i]);
+  }
+}
+
+hideStudents(studentItems); //first hides all students on the page
+showPage(clickedNum, studentArr); //initial showPage function call on page load
 appendPageLinks(numberOfStudents, studentsPerPage); //initial appendPageLinks function call on page load
 appendItem(pageHeader, createDiv, 'student-search', searchBarHTML); //appends search bar to header div
 
-let searchBox = document.querySelector('.student-search');
-searchBox.addEventListener('click', (event) => {
-  if (event.target.tagName == 'BUTTON') {
-    console.log(matchStudents(studentItems));
-  }
-});
 
-linksDiv.addEventListener('click', (event) => { //event listener listening for clicks on anchor tags within the pagination div
-  setActive();
-  clickedNum = document.querySelector('.active').textContent; //stores clicked page number in variable
-  showPage(clickedNum, studentItems); //displays students based off page number clicked
+page.addEventListener('click', (event) => {
+  //if button is pressed
+  if (event.target.classList.contains('button')) {
+    //determin which buttons
+      if(event.target.tagName == 'BUTTON') {
+        if (checkBlank(document.querySelector('.student-search input'))) {
+          console.log('match button pressed');
+          // hideStudents(studentItems);
+          clearArr(studentArr);
+          clearButtons(document.querySelector('.pagination ul'));
+          matchStudents(studentItems);
+          appendPageLinks(studentArr.length, studentsPerPage)
+          displayArr(studentArr);
+        }
+      // } else {
+      //   console.log('pagination button pressed');
+      //   clearArr(studentArr);
+      //   setActive();
+      //   clickedNum = document.querySelector('.active').textContent; //stores clicked page number in variable
+      //   showPage(clickedNum, studentItems); //displays students based off page number clicked
+      }
+  }
+    //filter students
+    //count students
+    //display links (appendPageLinks)
+    //display students (showPage)
 });
 
 console.log(`Number of students is ${numberOfStudents}`);
