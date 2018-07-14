@@ -81,6 +81,13 @@ const popDisplayList = (workingList, displayList) => {
   }
 }
 
+const popWorkingList = (updateList) => {
+  clearArr(studentArrWorking);
+  for (let i=0; i<updateList.length; i++) {
+    studentArrWorking.push(updateList[i])
+  }
+}
+
 const setActive = () => { //sets the clicked anchor tag class as active, removes old active tag from previous active
   if (event.target.tagName == 'A') { //if click target is an anchor tag
     let allLinks = document.querySelectorAll('.pagination ul li a'); //gets array of all anchor tags decendent of pagination class
@@ -113,9 +120,16 @@ const appendSearch = () => { //appends search bar to header div
   appendItem(pageHeader, createSearchDiv, 'student-search', searchBarHTML);
 }
 
+popWorkingList(studentArrAll);
 // appendSearch();
 appendPageLinks(studentArrAll.length, studentsPerPage);
-showPage(clickedNum, studentArrAll, studentArrDisplay);
+showPage(clickedNum, studentArrWorking, studentArrDisplay);
+
+
+//search feature should edit the working array
+//if no results then show message
+//otherwise refresh the page with new working array
+
 
 linksDiv.addEventListener('click', (event) => {
   if(event.target.tagName == 'A') {
@@ -123,7 +137,7 @@ linksDiv.addEventListener('click', (event) => {
     clickedNum = document.querySelector('.active').textContent; //stores clicked page number in variable
     hideStudents(studentArrDisplay);
     clearArr(studentArrDisplay)
-    showPage(clickedNum, studentArrAll, studentArrDisplay);
+    showPage(clickedNum, studentArrWorking, studentArrDisplay);
   }
 });
 
